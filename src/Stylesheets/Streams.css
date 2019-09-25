@@ -52,6 +52,11 @@ input {
 .Stream-box {
   margin: 10px;
   text-align: center;
+  width: 20rem;
+}
+
+.Stream-box h2 {
+  height: 2em;
 }
 
 table,
