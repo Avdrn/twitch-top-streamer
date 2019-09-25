@@ -10,6 +10,7 @@ export default class Streams extends Component {
     super()
       this.state = {  
         streams : [], 
+        searchedArray : [], 
     }
   }
 
@@ -17,14 +18,17 @@ export default class Streams extends Component {
   componentDidMount() {
     api.get("https://api.twitch.tv/kraken/streams/")
     .then(response => {
-      this.setState({streams: response.data.streams})
+      this.setState({
+        streams: response.data.streams,
+        searchedArray : response.data.streams,
+      })
     })
 
   }
 
       
   sortByViews = () => {
-    const copiedDisplay = [].concat(this.state.streams)
+    const copiedDisplay = [].concat(this.state.searchedArray)
     
     copiedDisplay.sort(function(a, b) {
       var streamA = a.channel.views
@@ -39,12 +43,12 @@ export default class Streams extends Component {
       return 0;
     });
     this.setState({
-      streams: copiedDisplay
+      searchedArray: copiedDisplay
     })
   }
 
   sortByFollowers = () => {
-    const copiedDisplay = [].concat(this.state.streams)
+    const copiedDisplay = [].concat(this.state.searchedArray)
     
     copiedDisplay.sort(function(a, b) {
       var streamA = a.channel.followers
@@ -59,12 +63,12 @@ export default class Streams extends Component {
       return 0;
     });
     this.setState({
-      streams: copiedDisplay
+      searchedArray: copiedDisplay
     })
   }
 
   sortByGameName = () => {
-    const copiedDisplay = [].concat(this.state.streams)
+    const copiedDisplay = [].concat(this.state.searchedArray)
     
     copiedDisplay.sort(function(a, b) {
       var streamA = a.game
@@ -80,7 +84,7 @@ export default class Streams extends Component {
       return 0;
     });
     this.setState({
-      streams: copiedDisplay
+      searchedArray: copiedDisplay
     })
   }
 
@@ -89,14 +93,14 @@ export default class Streams extends Component {
     let searchedGame = this.state.streams.filter((streams)=> (
       streams.channel.game.toUpperCase().indexOf(searchTerm) >= 0
     ))  
-    this.setState({streams: searchedGame})
+    this.setState({searchedArray: searchedGame})
   }
 
   render() {
     return (
       <div>
         <div className="Header">
-          <h1>LIST OF STREAMS</h1>
+          <h1>LIST OF TWITCH STREAMS</h1>
           <input onChange={this.search} placeholder="Search for a Game" type="text"/>
           <div className="Button-box">  
             <button className="Button" onClick={this.sortByGameName}>sort by Game</button>
@@ -106,16 +110,16 @@ export default class Streams extends Component {
         </div>
           
         <div className="Stream-container">
-          {this.state.streams ?
+          {this.state.searchedArray ?
           <>
-          {this.state.streams.map((streamsArray) => {
+          {this.state.searchedArray.map((streamsArray, key) => {
             return (
-              <div className="Stream-box">
+              <div key={key} className="Stream-box">
                   <h2>{streamsArray.game}</h2>
                   <table>
                     <thead>
                         <tr>
-                            <th colspan="2">{streamsArray.channel.display_name}</th>
+                            <th colSpan="2">{streamsArray.channel.display_name}</th>
                         </tr>
                     </thead>
                     <tbody>              
